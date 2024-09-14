@@ -3,8 +3,10 @@ import HttpError from "./HttpError.js";
 const validateBody = (schema) => {
   const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
+
     if (error) {
-      next(HttpError(400, error.message));
+      const cleanedMessage = error.message.replace(/\"/g, "");
+      next(HttpError(400, cleanedMessage));
     }
     next();
   };
