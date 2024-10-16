@@ -8,6 +8,7 @@ import authenticate from "../middlewares/authenticat.js";
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", authenticate, ctrl.getAllContacts);
+contactsRouter.get("/pro", authenticate, ctrl.getAllContactsPro);
 
 contactsRouter.get("/:id", authenticate, isValidId, ctrl.getOneContact);
 

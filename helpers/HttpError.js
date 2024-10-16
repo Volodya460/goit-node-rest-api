@@ -8,8 +8,8 @@ const messageList = {
 
 const HttpError = (status, message = messageList[status]) => {
   const error = new Error(message);
-  console.log(status);
   error.status = status;
+
   return error;
 };
 
