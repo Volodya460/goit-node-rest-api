@@ -4,13 +4,28 @@ import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10, favorite } = req.query;
+  const { page = 1, limit = 40, favorite } = req.query;
   const skip = (page - 1) * limit;
+
   let filter = { owner };
+
   if (favorite) {
     filter = { favorite, owner };
   }
+  const result = await Contact.find(filter, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "name email");
+  res.json(result);
+};
 
+export const getAllContactsPro = async (req, res) => {
+  const { page = 1, limit = 40, favorite } = req.query;
+  const skip = (page - 1) * limit;
+  let filter = {};
+  if (favorite) {
+    filter = { favorite };
+  }
   const result = await Contact.find(filter, "-createdAt -updatedAt", {
     skip,
     limit,
@@ -35,12 +50,14 @@ export const deleteContact = async (req, res) => {
     throw HttpError(404, "Not found");
   }
   res.json({
+    id,
     message: "Delete success",
   });
 };
 
 export const createContact = async (req, res) => {
   const { _id: owner } = req.user;
+
   const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
@@ -66,4 +83,5 @@ export default {
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
   deleteContact: ctrlWrapper(deleteContact),
+  getAllContactsPro: ctrlWrapper(getAllContactsPro),
 };
