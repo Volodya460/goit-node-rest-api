@@ -44,13 +44,13 @@ export const getOneContact = async (req, res) => {
 };
 
 export const deleteContact = async (req, res) => {
-  const { id } = req.params;
-  const result = await Contact.findByIdAndDelete(id);
+  const { id: _id } = req.params;
+  const result = await Contact.findByIdAndDelete(_id);
   if (!result) {
     throw HttpError(404, "Not found");
   }
   res.json({
-    id,
+    _id,
     message: "Delete success",
   });
 };
